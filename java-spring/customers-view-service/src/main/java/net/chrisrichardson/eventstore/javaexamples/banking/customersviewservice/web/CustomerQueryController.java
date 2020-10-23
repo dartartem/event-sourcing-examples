@@ -1,7 +1,8 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.customersviewservice.web;
 
-import net.chrisrichardson.eventstore.javaexamples.banking.customersviewservice.backend.CustomerQueryService;
-import net.chrisrichardson.eventstore.javaexamples.banking.web.customers.queryside.common.QuerySideCustomer;
+import net.chrisrichardson.eventstore.javaexamples.banking.customers.view.webapi.CustomersQueryResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.customersviewservice.service.CustomerQueryService;
+import net.chrisrichardson.eventstore.javaexamples.banking.customers.view.commonapi.CustomerView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class CustomerQueryController {
   }
 
   @RequestMapping(value = "/customers/{customerId}", method = RequestMethod.GET)
-  public CompletableFuture<QuerySideCustomer> getCustomer(@PathVariable String customerId) {
+  public CompletableFuture<CustomerView> getCustomer(@PathVariable String customerId) {
     return customerQueryService.findByCustomerId(customerId);
   }
 
@@ -42,7 +43,7 @@ public class CustomerQueryController {
 
   }
 
-  private CustomersQueryResponse getCustomersQueryResponse(List<QuerySideCustomer> customersList) {
+  private CustomersQueryResponse getCustomersQueryResponse(List<CustomerView> customersList) {
     return new CustomersQueryResponse(customersList);
   }
 }

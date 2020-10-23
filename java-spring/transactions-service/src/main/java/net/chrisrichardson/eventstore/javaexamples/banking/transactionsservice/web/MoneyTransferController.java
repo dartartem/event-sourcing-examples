@@ -1,10 +1,9 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.transactionsservice.web;
 
-
-import net.chrisrichardson.eventstore.javaexamples.banking.backend.common.transactions.TransferDetails;
-import net.chrisrichardson.eventstore.javaexamples.banking.common.transactions.CreateMoneyTransferRequest;
-import net.chrisrichardson.eventstore.javaexamples.banking.common.transactions.CreateMoneyTransferResponse;
-import net.chrisrichardson.eventstore.javaexamples.banking.transactionsservice.backend.MoneyTransferService;
+import net.chrisrichardson.eventstore.javaexamples.banking.transactions.webapi.CreateMoneyTransferRequest;
+import net.chrisrichardson.eventstore.javaexamples.banking.transactions.webapi.CreateMoneyTransferResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.transactions.domain.events.TransferDetails;
+import net.chrisrichardson.eventstore.javaexamples.banking.transactionsservice.service.MoneyTransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;

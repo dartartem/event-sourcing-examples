@@ -1,7 +1,7 @@
 package net.chrisrichardson.eventstorestore.javaexamples.testutil;
 
 import net.chrisrichardson.eventstore.javaexamples.banking.common.customers.*;
-import net.chrisrichardson.eventstore.javaexamples.banking.web.customers.queryside.common.QuerySideCustomer;
+import net.chrisrichardson.eventstore.javaexamples.banking.customers.view.commonapi.CustomerView;
 import org.junit.Assert;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,19 +22,19 @@ public class CustomersTestUtils {
   public void assertCustomerResponse(final String customerId, final CustomerInfo customerInfo) {
     AuthenticatedRestTemplate art = new AuthenticatedRestTemplate(restTemplate, customerInfo.getUserCredentials());
     eventually(
-            () -> CompletableFuture.completedFuture(art.getForEntity(customersBaseUrl + customerId, QuerySideCustomer.class)),
+            () -> CompletableFuture.completedFuture(art.getForEntity(customersBaseUrl + customerId, CustomerView.class)),
             querySideCustomer -> {
               Assert.assertEquals(customerId, querySideCustomer.getId());
               assertQuerySideCustomerEqualscCustomerInfo(querySideCustomer, customerInfo);
             });
   }
 
-  public void assertQuerySideCustomerEqualscCustomerInfo(QuerySideCustomer querySideCustomer, CustomerInfo customerInfo) {
-    Assert.assertEquals(querySideCustomer.getName(), customerInfo.getName());
-    Assert.assertEquals(querySideCustomer.getEmail(), customerInfo.getUserCredentials().getEmail());
-    Assert.assertEquals(querySideCustomer.getPhoneNumber(), customerInfo.getPhoneNumber());
-    Assert.assertEquals(querySideCustomer.getSsn(), customerInfo.getSsn());
-    Assert.assertEquals(querySideCustomer.getAddress(), customerInfo.getAddress());
+  public void assertQuerySideCustomerEqualscCustomerInfo(CustomerView customerView, CustomerInfo customerInfo) {
+    Assert.assertEquals(customerView.getName(), customerInfo.getName());
+    Assert.assertEquals(customerView.getEmail(), customerInfo.getUserCredentials().getEmail());
+    Assert.assertEquals(customerView.getPhoneNumber(), customerInfo.getPhoneNumber());
+    Assert.assertEquals(customerView.getSsn(), customerInfo.getSsn());
+    Assert.assertEquals(customerView.getAddress(), customerInfo.getAddress());
   }
 
   public static CustomerInfo generateCustomerInfo() {

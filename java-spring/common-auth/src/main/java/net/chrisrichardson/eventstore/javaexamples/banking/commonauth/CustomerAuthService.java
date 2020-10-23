@@ -1,6 +1,6 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.commonauth;
 
-import net.chrisrichardson.eventstore.javaexamples.banking.web.customers.queryside.common.QuerySideCustomer;
+import net.chrisrichardson.eventstore.javaexamples.banking.customers.view.commonapi.CustomerView;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 
@@ -14,16 +14,16 @@ public class CustomerAuthService {
     this.customerAuthRepository = customerAuthRepository;
   }
 
-  public QuerySideCustomer findByEmail(String email) {
-    QuerySideCustomer result = DataAccessUtils.uniqueResult(customerAuthRepository.findByEmail(email));
+  public CustomerView findByEmail(String email) {
+    CustomerView result = DataAccessUtils.uniqueResult(customerAuthRepository.findByEmail(email));
     if (result==null)
       throw new EmptyResultDataAccessException(1);
 
     return result;
   }
 
-  public QuerySideCustomer findByEmailAndPassword(String email, String password) {
-    QuerySideCustomer result =  DataAccessUtils.uniqueResult(customerAuthRepository.findByEmailAndPassword(email, password));
+  public CustomerView findByEmailAndPassword(String email, String password) {
+    CustomerView result =  DataAccessUtils.uniqueResult(customerAuthRepository.findByEmailAndPassword(email, password));
     if (result==null)
       throw new EmptyResultDataAccessException(1);
 

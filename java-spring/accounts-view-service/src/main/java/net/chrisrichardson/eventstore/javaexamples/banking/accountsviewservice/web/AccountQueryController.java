@@ -1,8 +1,11 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.web;
 
-import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.backend.AccountInfo;
-import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.backend.AccountNotFoundException;
-import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.backend.AccountQueryService;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.view.webapi.AccountHistoryResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.view.webapi.GetAccountResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.view.webapi.GetAccountsResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.domain.AccountInfo;
+import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.domain.AccountNotFoundException;
+import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.service.AccountQueryService;
 import net.chrisrichardson.eventstore.javaexamples.banking.common.accounts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

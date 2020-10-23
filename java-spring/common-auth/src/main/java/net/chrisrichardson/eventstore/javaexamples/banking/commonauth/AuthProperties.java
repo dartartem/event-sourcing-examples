@@ -1,10 +1,14 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.commonauth;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 
-@ConfigurationProperties(locations = "classpath:auth.properties", ignoreUnknownFields = false, prefix = "auth")
 public class AuthProperties {
+  @Value("${auth.server.secret}")
   private String serverSecret;
+
+  @Value("${auth.server.integer}")
   private Integer serverInteger;
 
   public String getServerSecret() {

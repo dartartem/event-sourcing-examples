@@ -1,8 +1,10 @@
 apply plugin: 'java'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 
 dependencies {
-    compile project(":common-auth-web")
+    compile project(":common-auth")
+
+    compile project(":api-gateway-service-api-web")
 
     compile "org.apache.httpcomponents:httpclient:4.5"
     compile "org.apache.httpcomponents:fluent-hc:4.5.1"
@@ -11,6 +13,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
 
     testCompile "junit:junit:4.11"
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
 }
 
 task copyWebStatic(type: Copy) {
@@ -18,4 +21,4 @@ task copyWebStatic(type: Copy) {
     into "build/resources/main/static"
 }
 
-jar.dependsOn(copyWebStatic)
+bootJar.dependsOn(copyWebStatic)

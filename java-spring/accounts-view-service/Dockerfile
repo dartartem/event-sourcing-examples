@@ -1,4 +1,3 @@
-FROM java:openjdk-8u91-jdk
-CMD java ${JAVA_OPTS} -jar accounts-view-service.jar
-EXPOSE 8080
-COPY build/libs/accounts-view-service.jar .
+ARG baseImageVersion
+FROM eventuateio/eventuate-examples-docker-images-spring-example-base-image:$baseImageVersion
+COPY build/libs/accounts-view-service.jar service.jar

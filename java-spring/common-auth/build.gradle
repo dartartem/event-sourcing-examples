@@ -2,14 +2,12 @@ apply plugin: 'java'
 
 dependencies {
     compile project(":common")
-    compile project(":customers-query-side-common")
+    compile project(":customers-view-service-api-common")
 
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-mongodb:$springBootVersion"
 
-    compile "org.springframework.security:spring-security-config:4.0.2.RELEASE"
-    compile "org.springframework.security:spring-security-web:4.0.2.RELEASE"
-
+    compile "org.springframework.boot:spring-boot-starter-security:$springBootVersion"
 
     testCompile "junit:junit:4.11"
 }

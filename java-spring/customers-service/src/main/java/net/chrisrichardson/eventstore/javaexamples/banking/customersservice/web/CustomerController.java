@@ -1,11 +1,11 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.customersservice.web;
 
-import net.chrisrichardson.eventstore.javaexamples.banking.common.accounts.DeleteAccountResponse;
-import net.chrisrichardson.eventstore.javaexamples.banking.common.customers.AddToAccountResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.webapi.DeleteAccountResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.customers.webapi.AddToAccountResponse;
 import net.chrisrichardson.eventstore.javaexamples.banking.common.customers.CustomerInfo;
-import net.chrisrichardson.eventstore.javaexamples.banking.common.customers.CustomerResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.customers.webapi.CustomerResponse;
 import net.chrisrichardson.eventstore.javaexamples.banking.common.customers.ToAccountInfo;
-import net.chrisrichardson.eventstore.javaexamples.banking.customersservice.backend.CustomerService;
+import net.chrisrichardson.eventstore.javaexamples.banking.customersservice.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

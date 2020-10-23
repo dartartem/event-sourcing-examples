@@ -2,7 +2,7 @@ package net.chrisrichardson.eventstore.javaexamples.banking.transactionsservice;
 
 import net.chrisrichardson.eventstore.javaexamples.banking.transactionsservice.web.MoneyTransferWebConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@Import(MoneyTransferWebConfiguration.class)
+@Import({MoneyTransferConfiguration.class, MoneyTransferWebConfiguration.class})
 @EnableAutoConfiguration
 public class TransactionsCommandSideServiceTestConfiguration {
 

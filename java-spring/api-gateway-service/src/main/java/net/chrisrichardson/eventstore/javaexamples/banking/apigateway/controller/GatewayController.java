@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +53,7 @@ public class GatewayController {
 
   @RequestMapping(value = "/api/**", method = {GET, POST, DELETE})
   @ResponseBody
-  public ResponseEntity<String> proxyRequest(HttpServletRequest request) throws NoSuchRequestHandlingMethodException, IOException, URISyntaxException {
+  public ResponseEntity<String> proxyRequest(HttpServletRequest request) throws NoHandlerFoundException, IOException, URISyntaxException {
     HttpUriRequest proxiedRequest = createHttpUriRequest(request);
     logger.info("request: {}", proxiedRequest);
     HttpResponse proxiedResponse = httpClient.execute(proxiedRequest);
@@ -68,7 +68,7 @@ public class GatewayController {
     return result;
   }
 
-  private HttpUriRequest createHttpUriRequest(HttpServletRequest request) throws URISyntaxException, NoSuchRequestHandlingMethodException, IOException {
+  private HttpUriRequest createHttpUriRequest(HttpServletRequest request) throws URISyntaxException, NoHandlerFoundException, IOException {
     URLRequestTransformer urlRequestTransformer = new URLRequestTransformer(apiGatewayProperties);
     ContentRequestTransformer contentRequestTransformer = new ContentRequestTransformer();
     HeadersRequestTransformer headersRequestTransformer = new HeadersRequestTransformer();

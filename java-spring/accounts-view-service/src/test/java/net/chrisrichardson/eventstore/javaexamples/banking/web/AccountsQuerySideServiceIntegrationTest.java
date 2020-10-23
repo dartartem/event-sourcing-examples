@@ -1,15 +1,13 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.web;
 
-import net.chrisrichardson.eventstore.javaexamples.banking.common.accounts.GetAccountResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.view.webapi.GetAccountResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -21,12 +19,10 @@ import net.chrisrichardson.eventstorestore.javaexamples.testutil.Verifier;
 import static net.chrisrichardson.eventstorestore.javaexamples.testutil.TestUtil.eventually;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = AccountsQuerySideServiceTestConfiguration.class)
-@WebAppConfiguration
-@IntegrationTest({"server.port=0", "management.port=0"})
+@SpringBootTest(classes = AccountsQuerySideServiceTestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AccountsQuerySideServiceIntegrationTest {
 
-  @Value("${local.server.port}")
+  @LocalServerPort
   private int port;
 
   private String baseUrl(String path) {

@@ -1,9 +1,9 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.accountsservice.web;
 
-import net.chrisrichardson.eventstore.javaexamples.banking.accountsservice.backend.AccountService;
-import net.chrisrichardson.eventstore.javaexamples.banking.common.accounts.CreateAccountRequest;
-import net.chrisrichardson.eventstore.javaexamples.banking.common.accounts.CreateAccountResponse;
-import net.chrisrichardson.eventstore.javaexamples.banking.common.accounts.DeleteAccountResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accountsservice.service.AccountService;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.webapi.CreateAccountRequest;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.webapi.CreateAccountResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.webapi.DeleteAccountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

@@ -1,8 +1,7 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.apigateway.utils;
 
 import org.apache.http.client.methods.RequestBuilder;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
-
+import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,7 +10,7 @@ import java.util.Enumeration;
 public class HeadersRequestTransformer extends ProxyRequestTransformer {
 
   @Override
-  public RequestBuilder transform(HttpServletRequest request) throws NoSuchRequestHandlingMethodException, URISyntaxException, IOException {
+  public RequestBuilder transform(HttpServletRequest request) throws NoHandlerFoundException, URISyntaxException, IOException {
     RequestBuilder requestBuilder = predecessor.transform(request);
 
     Enumeration<String> headerNames = request.getHeaderNames();

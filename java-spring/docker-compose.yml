@@ -1,61 +1,188 @@
-apigateway:
-  extends:
-    file: docker-compose-common.yml
-    service: apigateway
-  links:
-    - accountsservice
-    - transactionsservice
-    - accountsviewservice
-    - customersservice
-    - customersviewservice
-    - mongodb
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.2.4
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      KAFKA_HEAP_OPTS: -Xmx64m
+  
+  kafka:
+    image: "confluentinc/cp-kafka:5.2.4"
+    ports:
+      - 9092:9092
+      - 29092:29092
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_LISTENERS: LC://kafka:29092,LX://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: LC://kafka:29092,LX://${DOCKER_HOST_IP:-localhost}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LC:PLAINTEXT,LX:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LC
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_HEAP_OPTS: -Xmx192m
+  
+  mysql:
+    image: eventuateio/eventuate-mysql:$EVENTUATE_COMMON_VERSION
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqlpw
+  
+  
+  cdc-service:
+    image: eventuateio/eventuate-cdc-service:$EVENTUATE_CDC_VERSION
+    ports:
+      - "8099:8080"
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      EVENTUATELOCAL_CDC_DB_USER_NAME: root
+      EVENTUATELOCAL_CDC_DB_PASSWORD: rootpassword
+      EVENTUATELOCAL_CDC_READER_NAME: MySqlReader
+      EVENTUATELOCAL_CDC_OFFSET_STORE_KEY: MySqlBinlog
+      EVENTUATELOCAL_CDC_MYSQL_BINLOG_CLIENT_UNIQUE_ID: 1234567890
+      EVENTUATELOCAL_CDC_READ_OLD_DEBEZIUM_DB_OFFSET_STORAGE_TOPIC: "false"
+      EVENTUATE_CDC_TYPE: "EventuateLocal"
+  
+  mongodb:
+      image: mongo:3.0.4
+      hostname: mongodb
+      command: mongod --smallfiles
+      ports:
+        - "27017:27017"
 
-accountsservice:
-  extends:
-    file: docker-compose-common.yml
-    service: accountsservice
-  environment:
-    EVENTUATE_API_KEY_ID: ${EVENTUATE_API_KEY_ID}
-    EVENTUATE_API_KEY_SECRET: ${EVENTUATE_API_KEY_SECRET}
+  api-gateway-service:
+    build:
+      context: ./api-gateway-service/
+      args:
+        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb/mydb
+      ACCOUNTS_COMMANDSIDE_SERVICE_HOST: accounts-service
+      TRANSFERS_COMMANDSIDE_SERVICE_HOST: transactions-service
+      ACCOUNTS_QUERYSIDE_SERVICE_HOST: accounts-view-service
+      CUSTOMERS_COMMANDSIDE_SERVICE_HOST: customers-service
+      CUSTOMERS_QUERYSIDE_SERVICE_HOST: customers-view-service
+    depends_on:
+      - accounts-service
+      - transactions-service
+      - accounts-view-service
+      - customers-service
+      - customers-view-service
+      - mongodb
 
-transactionsservice:
-  extends:
-    file: docker-compose-common.yml
-    service: transactionsservice
-  environment:
-    EVENTUATE_API_KEY_ID: ${EVENTUATE_API_KEY_ID}
-    EVENTUATE_API_KEY_SECRET: ${EVENTUATE_API_KEY_SECRET}
+  accounts-service:
+    build:
+      context: ./accounts-service/
+      args:
+        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
+    restart: unless-stopped
+    ports:
+      - "8085:8080"
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+  transactions-service:
+    build:
+      context: ./transactions-service/
+      args:
+        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+  accounts-view-service:
+    build:
+      context: ./accounts-view-service/
+      args:
+        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mongodb
+      - mysql
+      - kafka
+      - zookeeper
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb/mydb
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
 
 
-accountsviewservice:
-  extends:
-    file: docker-compose-common.yml
-    service: accountsviewservice
-  links:
-    - mongodb
-  environment:
-    EVENTUATE_API_KEY_ID: ${EVENTUATE_API_KEY_ID}
-    EVENTUATE_API_KEY_SECRET: ${EVENTUATE_API_KEY_SECRET}
+  customers-service:
+    build:
+      context: ./customers-service/
+      args:
+        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
 
-customersservice:
-  extends:
-    file: docker-compose-common.yml
-    service: customersservice
-  environment:
-    EVENTUATE_API_KEY_ID: ${EVENTUATE_API_KEY_ID}
-    EVENTUATE_API_KEY_SECRET: ${EVENTUATE_API_KEY_SECRET}
-
-customersviewservice:
-  extends:
-    file: docker-compose-common.yml
-    service: customersviewservice
-  links:
-    - mongodb
-  environment:
-    EVENTUATE_API_KEY_ID: ${EVENTUATE_API_KEY_ID}
-    EVENTUATE_API_KEY_SECRET: ${EVENTUATE_API_KEY_SECRET}
-
-mongodb:
-  extends:
-    file: docker-compose-common.yml
-    service: mongodb
+  customers-view-service:
+    build:
+      context: ./customers-view-service/
+      args:
+        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION?}
+    restart: unless-stopped
+    ports:
+      - "8084:8080"
+    depends_on:
+      - mongodb
+      - mysql
+      - kafka
+      - zookeeper
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb/mydb
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092

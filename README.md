@@ -47,12 +47,7 @@ There is also an [API gateway](http://microservices.io/patterns/apigateway.html)
 
 # About the examples
 
-There are currently the following versions of the example application:
-
-  * java-spring - a Java and Spring Boot example
-  * scala-spring - a Scala and Spring Boot example (NOTE: this version is lagging the Java Spring and hasn't been updated in a longtime.)
-
-Other examples will be added shortly including a Scala/Play example.
+There is currently a Java and Spring Boot example: java-spring
 
 For more information, please see the [wiki](../../wiki)
 
@@ -63,9 +58,6 @@ It provides a simple yet powerful event-driven programming model that is based o
 Eventuate solves the distributed data management problems inherent in a microservice architecture.
 It consists of a scalable, distributed event store and client libraries for various languages and frameworks including Java, Scala, and the Spring framework.
 
-There are two versions of Eventuate:
-
-* [Eventuate SaaS server](http://eventuate.io/usingeventuate.html) - this is a full featured event store that is hosted on AWS
 * [Eventuate Local](http://eventuate.io/usingeventuate.html) - an open-source event store that is built using MySQL and Kafka
 
 There is also an embedded test event store, which is great for integration tests.
@@ -78,46 +70,19 @@ You just need to have Java 8 installed.
 
 The details of how to build and run the services depend slightly on whether you are using Eventuate SaaS or Eventuate Local.
 
-## Building and running using Eventuate SaaS
-
-First, must [sign up to get your credentials](https://signup.eventuate.io/) in order to get free access to the SaaS version.
-
-Next, build the application
-
-```
-cd java-spring
-./gradlew assemble
-```
-
-Next, you can launch the services using [Docker Compose](https://docs.docker.com/compose/):
-
-```
-docker-compose up -d
-```
-
-Finally, you can open the home page, which is served up by the API Gateway: `http://$DOCKER_HOST_IP:8080`
-
-Note: `DOCKER_HOST_IP` is the IP address of the machine where Docker is running, e.g. the IP address of the VirtualBox VM.
-
 ## Building and running using Eventuate Local
 
 First, build the application
 
 ```
 cd java-spring
-./gradlew assemble -P eventuateDriver=local
+./gradlew assemble
 ```
 
 Next, launch the services using [Docker Compose](https://docs.docker.com/compose/):
 
 ```
-export DOCKER_HOST_IP=...
-docker-compose -f docker-compose-eventuate-local.yml up -d
+./gradlew mysqlbinlogComposeUp
 ```
 
-Note: You need to set `DOCKER_HOST_IP` before running Docker Compose.
-This must be an IP address or resolvable hostname.
-It cannot be `localhost`.
-See this [guide to setting `DOCKER_HOST_IP`](http://eventuate.io/docs/usingdocker.html) for more information.
-
-Finally, you can open the home page, which is served up by the API Gateway: `http://$DOCKER_HOST_IP:8080`
+Finally, you can open the home page, which is served up by the API Gateway: `http://localhost:8080`

@@ -1,10 +1,14 @@
 apply plugin: 'java'
 
 dependencies {
-    compile project(":common")
-    compile project(":common-auth")
+    compile project(":accounts-service-api-web")
+    compile project(":accounts-view-service-api-web")
+    compile project(":customers-service-api-web")
+    compile project(":transactions-service-api-web")
 
-    compile "io.eventuate.client.java:eventuate-client-java-spring:$eventuateClientVersion"
+    compile project(":customers-view-service-api-common")
+
+    compile "io.eventuate.local.java:eventuate-client-java-spring:$eventuateLocalVersion"
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
 
     compile "junit:junit:4.11"

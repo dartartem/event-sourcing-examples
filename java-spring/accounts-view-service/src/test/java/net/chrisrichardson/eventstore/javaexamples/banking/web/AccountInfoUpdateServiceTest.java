@@ -1,23 +1,23 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.web;
 
-import io.eventuate.Int128;
+import io.eventuate.common.id.IdGenerator;
+import io.eventuate.common.id.IdGeneratorImpl;
+import io.eventuate.common.id.Int128;
 import io.eventuate.javaclient.spring.jdbc.EventuateJdbcEventStoreConfiguration;
-import io.eventuate.javaclient.spring.jdbc.IdGenerator;
-import io.eventuate.javaclient.spring.jdbc.IdGeneratorImpl;
-import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.backend.AccountInfo;
-import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.backend.AccountInfoUpdateService;
-import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.backend.AccountQueryService;
-import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.backend.AccountViewBackendConfiguration;
-import net.chrisrichardson.eventstore.javaexamples.banking.backend.common.accounts.AccountCreditedEvent;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.domain.events.AccountCreditedEvent;
+import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.domain.AccountInfo;
+import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.service.AccountInfoUpdateService;
+import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.service.AccountQueryService;
+import net.chrisrichardson.eventstore.javaexamples.banking.accountsviewservice.AccountViewConfiguration;
 import net.chrisrichardson.eventstore.javaexamples.banking.common.accounts.AccountChangeInfo;
 import net.chrisrichardson.eventstore.javaexamples.banking.common.accounts.AccountTransactionInfo;
 import net.chrisrichardson.eventstore.javaexamples.banking.common.transactions.TransferState;
+import net.chrisrichardson.eventstore.javaexamples.banking.commonswagger.CommonSwaggerConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,13 +29,12 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = AccountInfoUpdateServiceTest.AccountInfoUpdateServiceTestConfiguration.class)
-@IntegrationTest
+@SpringBootTest(classes = AccountInfoUpdateServiceTest.AccountInfoUpdateServiceTestConfiguration.class)
 public class AccountInfoUpdateServiceTest {
 
   @Configuration
   @EnableAutoConfiguration
-  @Import({AccountViewBackendConfiguration.class, EventuateJdbcEventStoreConfiguration.class})
+  @Import({AccountViewConfiguration.class, EventuateJdbcEventStoreConfiguration.class, CommonSwaggerConfiguration.class})
   public static class AccountInfoUpdateServiceTestConfiguration {
 
   }

@@ -1,7 +1,7 @@
 package net.chrisrichardson.eventstore.javaexamples.banking.customersviewservice.web;
 
-import net.chrisrichardson.eventstore.javaexamples.banking.customersviewservice.backend.CustomerViewBackendConfiguration;
-import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
+import net.chrisrichardson.eventstore.javaexamples.banking.commonswagger.CommonSwaggerConfiguration;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-@Import({CustomerViewBackendConfiguration.class})
+@Import({CommonSwaggerConfiguration.class})
 @ComponentScan
 public class CustomersViewWebConfiguration extends WebMvcConfigurerAdapter {
 

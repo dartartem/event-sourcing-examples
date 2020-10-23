@@ -1,10 +1,17 @@
 package net.chrisrichardson.eventstorestore.javaexamples.testutil;
 
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.view.webapi.AccountHistoryResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.view.webapi.GetAccountResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.view.webapi.GetAccountsResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.webapi.CreateAccountRequest;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.webapi.CreateAccountResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.accounts.webapi.DeleteAccountResponse;
 import net.chrisrichardson.eventstore.javaexamples.banking.common.accounts.*;
 import net.chrisrichardson.eventstore.javaexamples.banking.common.customers.*;
-import net.chrisrichardson.eventstore.javaexamples.banking.common.transactions.CreateMoneyTransferRequest;
-import net.chrisrichardson.eventstore.javaexamples.banking.common.transactions.CreateMoneyTransferResponse;
-import net.chrisrichardson.eventstore.javaexamples.banking.web.customers.queryside.common.QuerySideCustomer;
+import net.chrisrichardson.eventstore.javaexamples.banking.transactions.webapi.CreateMoneyTransferRequest;
+import net.chrisrichardson.eventstore.javaexamples.banking.transactions.webapi.CreateMoneyTransferResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.customers.webapi.CustomerResponse;
+import net.chrisrichardson.eventstore.javaexamples.banking.customers.view.commonapi.CustomerView;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
@@ -158,7 +165,7 @@ public abstract class AbstractRestAPITest {
   private void assertToAccountsContains(final String customerId, AuthenticatedRestTemplate authenticatedRestTemplate, final ToAccountInfo toAccountInfo) {
     eventually(
             () -> CompletableFuture.completedFuture(authenticatedRestTemplate.getForEntity(baseUrl("/customers/" + customerId),
-                    QuerySideCustomer.class)),
+                    CustomerView.class)),
             customerResponse -> {
               assertEquals(customerId, customerResponse.getId());
               assertTrue(customerResponse.getToAccounts().values().stream().anyMatch(t -> t.equals(toAccountInfo)));
