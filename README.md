@@ -86,3 +86,9 @@ Next, launch the services using [Docker Compose](https://docs.docker.com/compose
 ```
 
 Finally, you can open the home page, which is served up by the API Gateway: `http://localhost:8080`
+
+# Using the Swagger UI
+
+The individual services are Swagger "enabled".
+
+Open the url `http://localhost:<SERVICE-PORT>/swagger-ui/index.html`
